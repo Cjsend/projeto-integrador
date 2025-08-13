@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rutinas — Gerenciador de Rotinas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="brand">
+        <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden>
+          <path fill="currentColor" d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zM7 9h2V7H7v2zm0 8h2v-2H7v2zM11 5h2V3h-2v2zM11 13h2v-2h-2v2zM15 9h2V7h-2v2zM15 17h2v-2h-2v2zM19 5h2V3h-2v2z"/>
+        </svg>
+        <div class="brand-text">
+          <h1>Rutinas</h1>
+          <small>Organize suas rotinas</small>
+        </div>
+      </div>
+
+      <nav class="menu">
+        <button class="menu-btn active" data-view="home">Início</button>
+        <button class="menu-btn" data-view="rotinas">Minhas Rotinas</button>
+        <button class="menu-btn" data-view="criar">Criar Rotina</button>
+        <button class="menu-btn" data-view="relatorios">Relatórios</button>
+        <button class="menu-btn" data-view="config">Configurações</button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <small>Feito pra seu projeto integrador</small>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+      <!-- HEADER -->
+      <header class="topbar">
+        <div class="search-wrap">
+          <input id="searchInput" placeholder="Pesquisar rotinas..." />
+        </div>
+        <div class="top-actions">
+          <button id="exportBtn" title="Exportar rotinas">Exportar</button>
+          <button id="importBtn" title="Importar rotinas">Importar</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" />
+        </div>
+      </header>
+
+      <!-- VIEWS -->
+      <section id="view-home" class="view active">
+        <div class="home-grid">
+          <div class="card welcome">
+            <h2>Bem-vindo</h2>
+            <p>Gerencie suas rotinas diárias: crie horários, repetições, adicione comentários e acompanhe o progresso.</p>
+            <div class="quick-actions">
+              <button data-view-switch="criar">Criar nova rotina</button>
+              <button data-view-switch="rotinas">Ver minhas rotinas</button>
+            </div>
+          </div>
+
+          <div class="card summary" id="summaryCard">
+            <h3>Resumo</h3>
+            <ul>
+              <li>Total de rotinas: <strong id="totalRoutines">0</strong></li>
+              <li>Concluídas hoje: <strong id="completedToday">0</strong></li>
+              <li>Próxima rotina: <strong id="nextRoutine">—</strong></li>
+            </ul>
+          </div>
+
+          <div class="card tips">
+            <h3>Dicas</h3>
+            <ol>
+              <li>Use a opção de repetir para rotinas semanais.</li>
+              <li>Adicione comentários para rastrear progresso.</li>
+              <li>Exporte suas rotinas antes de mudar de navegador.</li>
+            </ol>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-rotinas" class="view">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Minhas Rotinas</h2>
+            <div class="filters">
+              <select id="filterBy">
+                <option value="all">Todas</option>
+                <option value="today">Somente hoje</option>
+                <option value="completed">Concluídas</option>
+                <option value="pending">Pendentes</option>
+              </select>
+              <select id="sortBy">
+                <option value="next">Próxima</option>
+                <option value="name">Nome (A-Z)</option>
+                <option value="time">Horário</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="list-controls">
+            <button id="clearAll">Limpar tudo</button>
+            <button id="bulkComplete">Marcar todas como concluídas</button>
+          </div>
+
+          <ul id="routinesList" class="routines-list"></ul>
+        </div>
+      </section>
+
+      <section id="view-criar" class="view">
+        <div class="panel">
+          <h2>Criar / Editar Rotina</h2>
+          <form id="routineForm" class="routine-form">
+            <input type="hidden" id="routineId" />
+
+            <label>
+              Título
+              <input id="title" required placeholder="Ex: Academia, Estudar JS..." />
+            </label>
+
+            <label>
+              Descrição
+              <textarea id="description" rows="3" placeholder="Notas, detalhes..."></textarea>
+            </label>
+
+            <div class="row">
+              <label class="col">
+                Horário
+                <input id="time" type="time" />
+              </label>
+
+              <label class="col inline">
+                <span>Dias</span>
+                <div class="days">
+                  <label><input type="checkbox" value="0" /> D</label>
+                  <label><input type="checkbox" value="1" /> S</label>
+                  <label><input type="checkbox" value="2" /> T</label>
+                  <label><input type="checkbox" value="3" /> Q</label>
+                  <label><input type="checkbox" value="4" /> Q</label>
+                  <label><input type="checkbox" value="5" /> S</label>
+                  <label><input type="checkbox" value="6" /> S</label>
+                </div>
+              </label>
+
+              <label class="col">
+                Repetir
+                <select id="repeat">
+                  <option value="none">Não repetir</option>
+                  <option value="daily">Diariamente</option>
+                  <option value="weekly">Semanalmente</option>
+                  <option value="monthly">Mensalmente</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" id="saveRoutine">Salvar rotina</button>
+              <button type="button" id="resetForm">Limpar</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section id="view-relatorios" class="view">
+        <div class="panel">
+          <h2>Relatórios</h2>
+          <div id="reports" class="reports-grid">
+            <div class="report-card">
+              <h3>Rotinas por dia</h3>
+              <ul id="byDayList"></ul>
+            </div>
+            <div class="report-card">
+              <h3>Atividades recentes</h3>
+              <ul id="recentActivities"></ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-config" class="view">
+        <div class="panel">
+          <h2>Configurações</h2>
+          <label><input type="checkbox" id="enableNotifications" /> Ativar notificações do navegador</label>
+          <p class="muted">As notificações pedem permissão ao navegador. Funciona quando a aba está aberta.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL: comentários/editar -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="rotinas.js"></script>
+</body>
+</html>
